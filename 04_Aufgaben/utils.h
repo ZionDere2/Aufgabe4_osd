@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
+#include <math.h>
 
 /*
 Utility functions used throughout the codebase.
