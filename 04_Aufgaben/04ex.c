@@ -24,6 +24,28 @@ Headerfile und die zugehörige Implementierung sind bereits eingebunden, die Fun
 also einfach verwendet werden.
 */
 Canvas draw_odd_circle(Canvas c, int x, int y, int radius_from_middle) {
+    int min_x = x - radius_from_middle;
+    int max_x = x + radius_from_middle;
+    int min_y = y - radius_from_middle;
+    int max_y = y + radius_from_middle;
+
+    int width = canvas_width(c);
+    int height = canvas_height(c);
+
+    for (int yy = min_y; yy <= max_y; yy++) {
+        if (yy < 0 || yy >= height) {
+            continue;
+        }
+        for (int xx = min_x; xx <= max_x; xx++) {
+            if (xx < 0 || xx >= width) {
+                continue;
+            }
+            if (distance(x, y, xx, yy) <= radius_from_middle) {
+                c = canvas_set_black(c, xx, yy);
+            }
+        }
+    }
+
     return c;
 }
 
@@ -37,7 +59,10 @@ Die Datei `04ex_helpers.h` mit den Hilsfunktionen enthält eine Funktion `square
 Distanz zu berechnen.
 */
 int my_distance(int x0, int y0, int x1, int y1) {
-    return 0;
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    int squared = dx * dx + dy * dy;
+    return squareroot(squared);
 }
 
 /*
@@ -47,7 +72,16 @@ Tipp: Finden Sie die größte natürliche Zahl, deren Quadrat kleiner oder gleic
 testen nur mit relativ kleinen Zahlen.
 */
 int my_squareroot(int n) {
-    return 0;
+    if (n <= 0) {
+        return 0;
+    }
+
+    int candidate = 0;
+    while ((candidate + 1) * (candidate + 1) <= n) {
+        candidate++;
+    }
+
+    return candidate;
 }
 
 /*
@@ -64,6 +98,30 @@ Für Kreise mit _geradem_ Durchmesser rufen Sie Ihre `draw_odd_circle` vier mal 
 welche den exakten Mittelpunkt des erwünschten Kreises umgeben.
 */
 Canvas draw_circle(Canvas c, int x, int y, int diameter) {
+    if (diameter <= 0) {
+        return c;
+    }
+
+    if (diameter % 2 == 1) {
+        int radius = diameter / 2;
+        int center_x = x + radius;
+        int center_y = y + radius;
+        return draw_odd_circle(c, center_x, center_y, radius);
+    }
+
+    int radius = diameter / 2 - 1;
+    if (radius < 0) {
+        radius = 0;
+    }
+
+    int base_x = x + diameter / 2 - 1;
+    int base_y = y + diameter / 2 - 1;
+
+    c = draw_odd_circle(c, base_x, base_y, radius);
+    c = draw_odd_circle(c, base_x + 1, base_y, radius);
+    c = draw_odd_circle(c, base_x, base_y + 1, radius);
+    c = draw_odd_circle(c, base_x + 1, base_y + 1, radius);
+
     return c;
 }
 
@@ -74,7 +132,7 @@ Kreisezeichnen implementiert. Das ist ziemlich cool!
 Geben Sie zur Feier `5` zurück.
 */
 int high_five() {
-    return 0;
+    return 5;
 }
 
 /*
@@ -86,7 +144,18 @@ Zum Beispiel `hailstone(1) == 0`, `hailstone(4) == 2` (4 -> 2 -> 1), und `hailst
 Berechnen Sie die Hailstone-Zahl vom Parameter `n`.
 */
 int hailstone(int n) {
-    return 0;
+    int steps = 0;
+
+    while (n > 1) {
+        if (n % 2 == 0) {
+            n /= 2;
+        } else {
+            n = 3 * n + 1;
+        }
+        steps++;
+    }
+
+    return steps;
 }
 
 /*
@@ -100,5 +169,5 @@ allerdings Ihre eigenen Tests schreiben.
 Lassen Sie `99` von dieser Funktion zurückgeben um zu zeigen, dass Sie das verstanden haben.
 */
 int bring_your_own_tests() {
-    return 0;
+    return 99;
 }
