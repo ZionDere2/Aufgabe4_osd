@@ -6,7 +6,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <math.h>
 
 /*
 Utility functions used throughout the codebase.
@@ -130,14 +129,24 @@ bool is_invalid_filename(char* name) {
 Number of characters you need to render a `uint16_t` in base 10.
 */
 size_t ascii_width_u16(uint16_t n) {
-    return n == 0 ? 1 : floor(log10(n)) + 1;
+    size_t width = 1;
+    while (n >= 10) {
+        n /= 10;
+        width++;
+    }
+    return width;
 }
 
 /*
 Number of characters you need to render a `size_t` in base 10.
 */
 size_t ascii_width_size(size_t n) {
-    return n == 0 ? 1 : floor(log10(n)) + 1;
+    size_t width = 1;
+    while (n >= 10) {
+        n /= 10;
+        width++;
+    }
+    return width;
 }
 
 #endif
